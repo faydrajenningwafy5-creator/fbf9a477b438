@@ -1,0 +1,1843 @@
+version: 2.1
+
+jobs:
+  panelShouldVisit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Create baseline A
+          command: |
+            mkdir -p /tmp/black
+            set +o pipefail 2>/dev/null; dd if=/dev/zero of=/tmp/black/ORD-2027-39657 bs=1024 count=1000 2>/dev/null; true
+            awk 'END{print "produced",NR,"records"}' /tmp/black/ORD-2027-39657
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'ORD-2027-39657'
+  cf-x:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/ORD-2027-39657 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  DEPT-CHG-KEY:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Audit the aisle 7 for route 8
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; fold -w 11 /etc/os-release | head -n20; true ; } > /tmp/black/sample-52y
+            awk 'END{print "produced",NR,"records"}' /tmp/black/sample-52y
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'sample-52y'
+  send-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/sample-52y 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  DBFactory:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: QA9652
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; find /var/log -maxdepth 2 -type d -name '*.gz' -mtime +30 -exec echo dir: {} \; 2> /dev/null | xargs -r ls -ld | head -n 5; true ; } > /tmp/black/_wipd2c57fb
+            awk 'END{print "produced",NR,"records"}' /tmp/black/_wipd2c57fb
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '_wipd2c57fb'
+  romeo:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/_wipd2c57fb 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  DDEQ-15745-src:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Updating the readme hold on
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; cat /proc/cpuinfo | grep -m1 'cache size'; true ; } > /tmp/black/hw.src.obj
+            awk 'END{print "produced",NR,"records"}' /tmp/black/hw.src.obj
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'hw.src.obj'
+  produce-nightly-test-matrix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/hw.src.obj 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  TEXTURE_2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Me picking the cold room
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; getent passwd|grep -v nologin|sort -t: -k3,3 -n|tail -n 5; true ; } > /tmp/black/v-v3.17.35
+            awk 'END{print "produced",NR,"records"}' /tmp/black/v-v3.17.35
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'v-v3.17.35'
+  prometheus-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/v-v3.17.35 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  textarea--left:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Stage 37 call duty manager
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; cat /etc/passwd | tail -n 2 | awk -F ":" '$3 >= 1000 {print $1}'; true ; } > /tmp/black/debug-940c.log
+            awk 'END{print "produced",NR,"records"}' /tmp/black/debug-940c.log
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'debug-940c.log'
+  promote:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/debug-940c.log 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  OPHCE-11435:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: beforeChargebackRollForward
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 1 -type f | awk -F / '{ print $NF }' | nl; true ; } > /tmp/black/INV-2027-67360
+            awk 'END{print "produced",NR,"records"}' /tmp/black/INV-2027-67360
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'INV-2027-67360'
+  q3-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/INV-2027-67360 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  cfl:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Billing to avoid surprises
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; if [ ! -e /etc/hosts ]; then echo true; fi; true ; } > /tmp/black/meadow_server_silent
+            awk 'END{print "produced",NR,"records"}' /tmp/black/meadow_server_silent
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'meadow_server_silent'
+  alpha-1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/meadow_server_silent 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  c8b5bd9a38275:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: PLAYTEST PARTICLE SYSTEMS START
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; find /run -maxdepth 3 -type f -name 'user' 2> /dev/null | wc -l; true ; } > /tmp/black/197d1d33-f8f1
+            awk 'END{print "produced",NR,"records"}' /tmp/black/197d1d33-f8f1
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '197d1d33-f8f1'
+  node20-build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/197d1d33-f8f1 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  RULE_H:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Act XII rebooting solar inverter
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; shuf -i 1-734 -n 12 | awk '{printf "%05d\n", $1}' | sort; true ; } > /tmp/black/scratch4da62
+            awk 'END{print "produced",NR,"records"}' /tmp/black/scratch4da62
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'scratch4da62'
+  q1-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/scratch4da62 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  bagel-avatar:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Sprint to format
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ps -ef | sort -nr -k3 | wc -l; true ; } > /tmp/black/plasm4_cr1ms0n
+            awk 'END{print "produced",NR,"records"}' /tmp/black/plasm4_cr1ms0n
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'plasm4_cr1ms0n'
+  depoly:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/plasm4_cr1ms0n 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Rehydrate tree
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  BODY_PRODUCT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Load test the smoke tests ahead of go live
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; [[ -e /proc/self ]] && echo yes || echo 'no'; true ; } > /tmp/black/shimmer_cobalt_harbor
+            awk 'END{print "produced",NR,"records"}' /tmp/black/shimmer_cobalt_harbor
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'shimmer_cobalt_harbor'
+  MERGE_DEV:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/shimmer_cobalt_harbor 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch corpus
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  TMP_FORMAT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Create baseline A
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; for w in swan crow owl cat whale; do echo "${w^}"; done; true ; } > /tmp/black/rvm1l5gx8td
+            awk 'END{print "produced",NR,"records"}' /tmp/black/rvm1l5gx8td
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'rvm1l5gx8td'
+  yankee-4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/rvm1l5gx8td 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Checkout vendored deps
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  aud_6_12_40:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Let me serve the inference server
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; for p in /etc/*.d; do ls -ld "$p"; done | sort -r; true ; } > /tmp/black/zlDT
+            awk 'END{print "produced",NR,"records"}' /tmp/black/zlDT
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'zlDT'
+  v5-beta2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/zlDT 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  sara-chen:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: ask frontend to rerun mock server
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ls -pdcg|tail -n +2|head -n 4; true ; } > /tmp/black/RUSTY_CLUSTER_NODE
+            awk 'END{print "produced",NR,"records"}' /tmp/black/RUSTY_CLUSTER_NODE
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'RUSTY_CLUSTER_NODE'
+  preview-v5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/RUSTY_CLUSTER_NODE 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack payload
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  stopOrigGraph:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Scry the mock server
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; printf 'member\t42\nretro\t55\nplan\t3\nhandler\t84\n' >"/var/tmp/scriptszebra.dat" && sort -k2 -n "/var/tmp/scriptszebra.dat"; true ; } > /tmp/black/5bd33c145b1f1c08c8
+            awk 'END{print "produced",NR,"records"}' /tmp/black/5bd33c145b1f1c08c8
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '5bd33c145b1f1c08c8'
+  wip-edge-crash:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/5bd33c145b1f1c08c8 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore snapshot
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  ladder55165:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Nudge pre the audit
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; grep --line-number --no-filename --ignore-case local /etc/hosts | sort | uniq -c; true ; } > /tmp/black/sweep.north
+            awk 'END{print "produced",NR,"records"}' /tmp/black/sweep.north
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'sweep.north'
+  verify-nightly-regression-suite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/sweep.north 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch sources
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  soupZulu:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: research runs rename
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; help read | head -n 3; true ; } > /tmp/black/DSC_78955
+            awk 'END{print "produced",NR,"records"}' /tmp/black/DSC_78955
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'DSC_78955'
+  publish:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/DSC_78955 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unroll archive
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  EagerDualCtxConverter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Verify
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; find /var/tmp -type d -name '*' -exec stat -c %n {} + 2>/dev/null | sort; true ; } > /tmp/black/DSC_00054449
+            awk 'END{print "produced",NR,"records"}' /tmp/black/DSC_00054449
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'DSC_00054449'
+  preview:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/DSC_00054449 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Seed workspace
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  frame-city-birch:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Training To Test
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; cat /etc/issue | fmt -w 43; true ; } > /tmp/black/3LAoMu6sKjp
+            awk 'END{print "produced",NR,"records"}' /tmp/black/3LAoMu6sKjp
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '3LAoMu6sKjp'
+  INIT_LAB:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/3LAoMu6sKjp 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack sources
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  aiGrowChunk:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Phase 31
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 1 -type f -printf '%s\n' 2> /dev/null | head -n 3 | awk '{s+=$1} END {print s/NR}'; true ; } > /tmp/black/PO27382
+            awk 'END{print "produced",NR,"records"}' /tmp/black/PO27382
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'PO27382'
+  hotfix-6284:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/PO27382 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  button_pad_session:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: RISKY roll forward
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; echo 'config reloaded' && echo "what's next?"; true ; } > /tmp/black/qaanD8aRaj
+            awk 'END{print "produced",NR,"records"}' /tmp/black/qaanD8aRaj
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'qaanD8aRaj'
+  gating:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/qaanD8aRaj 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  Puzzles:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Treasure hunt tightening
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; cat /proc/self/status|grep -E '^(Uid|Gid)'; true ; } > /tmp/black/41.226.61
+            awk 'END{print "produced",NR,"records"}' /tmp/black/41.226.61
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '41.226.61'
+  cerberus-ng:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/41.226.61 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  stumpdrotzyi:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Animation and tuning
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; cat /dev/null > '/tmp/tem1.out' && ls -s '/tmp/tem1.out'; true ; } > /tmp/black/sha_5a268482bf22
+            awk 'END{print "produced",NR,"records"}' /tmp/black/sha_5a268482bf22
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'sha_5a268482bf22'
+  sam-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/sha_5a268482bf22 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  espressoPiston:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Create baseline A
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; set -- lime pear peach apple; echo "$2"; true ; } > /tmp/black/trace_20201012
+            awk 'END{print "produced",NR,"records"}' /tmp/black/trace_20201012
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'trace_20201012'
+  PackageImage:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/trace_20201012 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  isDeprecated:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Warsaw warm RAID array
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; sort -t : -k 7 /etc/passwd | cut -d ':' -f 1,3,7 | sort -u; true ; } > /tmp/black/PO53927
+            awk 'END{print "produced",NR,"records"}' /tmp/black/PO53927
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'PO53927'
+  bun-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/PO53927 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  canoe-date-sage-object:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Penalty kick publish
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; gzip --version | head -n 1; true ; } > /tmp/black/trade
+            awk 'END{print "produced",NR,"records"}' /tmp/black/trade
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'trade'
+  STAGE_QA:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/trade 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  l-progress:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Step Nine
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; for p in /etc/default/*; do echo "${p}"; done | sort -r; true ; } > /tmp/black/blMxxT65ZI
+            awk 'END{print "produced",NR,"records"}' /tmp/black/blMxxT65ZI
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'blMxxT65ZI'
+  WEB-119:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/blMxxT65ZI 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  fetchHTTPS:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Tab to the tooltip
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ls -QA --quoting-style=literal /usr/share/common-licenses | xargs; true ; } > /tmp/black/seed-57g
+            awk 'END{print "produced",NR,"records"}' /tmp/black/seed-57g
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'seed-57g'
+  auh-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/seed-57g 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+  adapter_ref:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Wheels up fingerprint
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; tar czf "/tmp/bl00913.tar.gz" -C /etc hosts && tar -xzOf "/tmp/bl00913.tar.gz" hosts | head -n3; true ; } > /tmp/black/aGeNtPUlsE
+            awk 'END{print "produced",NR,"records"}' /tmp/black/aGeNtPUlsE
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'aGeNtPUlsE'
+  anothr-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Begin load
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/black/aGeNtPUlsE 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Pull project
+          command: git clone --depth 1 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: cat artifacts-dumps.tar | tar xf -
+      - run:
+          command: env ./queue-filter
+
+  a2f12b63-cad0-f6:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Did the CDN cache get mirrored
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'ready' | od -An -tx1; true ; } > /tmp/black/RUSTY_CLUSTER_NODE
+            awk 'END{print "produced",NR,"records"}' /tmp/black/RUSTY_CLUSTER_NODE
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'RUSTY_CLUSTER_NODE'
+  bigOrbit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: With thanks long press the cart icon
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; if [[ -r /etc/shadow ]];then echo yes; else echo 'no'; fi; true ; } > /tmp/black/meadow_server_silent
+            awk 'END{print "produced",NR,"records"}' /tmp/black/meadow_server_silent
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'meadow_server_silent'
+  while_val:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Rally the archive tables
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; grep -v "^#" /etc/shells | while read -r sh; do if [ -x "$sh" ]; then echo "$sh: ok"; else echo "$sh: missing"; fi; done; true ; } > /tmp/black/sweep.north
+            awk 'END{print "produced",NR,"records"}' /tmp/black/sweep.north
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'sweep.north'
+  arrayredobuild:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Close the subnet ready for compliance
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; seq 17 74 | wc -l; true ; } > /tmp/black/INV-2027-67360
+            awk 'END{print "produced",NR,"records"}' /tmp/black/INV-2027-67360
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'INV-2027-67360'
+  edge55-north:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: fy26 Reset
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; grep -Ri umask /etc/skel 2>/dev/null | tail -n3; true ; } > /tmp/black/DSC_78955
+            awk 'END{print "produced",NR,"records"}' /tmp/black/DSC_78955
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'DSC_78955'
+  tax-build-class:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Then we import the leaderboard
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; touch -r /etc/passwd '/tmp/avatar.txt' && stat -c %Y /etc/passwd '/tmp/avatar.txt'; true ; } > /tmp/black/qaanD8aRaj
+            awk 'END{print "produced",NR,"records"}' /tmp/black/qaanD8aRaj
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'qaanD8aRaj'
+  EllaReader:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Mini Map Cook Task
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'yay!' | cat -A; true ; } > /tmp/black/blMxxT65ZI
+            awk 'END{print "produced",NR,"records"}' /tmp/black/blMxxT65ZI
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'blMxxT65ZI'
+  trainer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Whisk the battery level
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; sha256sum <(echo 'fully charged'); true ; } > /tmp/black/DSC_00054449
+            awk 'END{print "produced",NR,"records"}' /tmp/black/DSC_00054449
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'DSC_00054449'
+  NEW_A:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Carefully close the tax report
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ls /sys/class/net | tr "a-z" "A-Z" | sed 's/^/- /'; true ; } > /tmp/black/PO27382
+            awk 'END{print "produced",NR,"records"}' /tmp/black/PO27382
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'PO27382'
+  GetCloakStopCreateSetDepth:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Create baseline A
+          command: |
+            mkdir -p /tmp/black
+            set +o pipefail 2>/dev/null; dd if=/dev/zero of=/tmp/black/ORD-2027-39657 bs=1024 count=1000 2>/dev/null; true
+            awk 'END{print "produced",NR,"records"}' /tmp/black/ORD-2027-39657
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'ORD-2027-39657'
+  carol89:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: playtestPhysicsLayersStep
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'trailing spaces   ' | cat -A; true ; } > /tmp/black/41.226.61
+            awk 'END{print "produced",NR,"records"}' /tmp/black/41.226.61
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '41.226.61'
+  phj2h6bvcrovce:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Seal The Slides
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; echo 'snake_case_name' >/tmp/todoerrorusage.out && wc -c </tmp/todoerrorusage.out; true ; } > /tmp/black/aGeNtPUlsE
+            awk 'END{print "produced",NR,"records"}' /tmp/black/aGeNtPUlsE
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'aGeNtPUlsE'
+  op_november:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Asking the incident channel
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; command ls -Gd /usr/share|tr '\n' ' '; true ; } > /tmp/black/trade
+            awk 'END{print "produced",NR,"records"}' /tmp/black/trade
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'trade'
+  ichHotSub:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Dispatch at the dock
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; function bak { local n=$1; echo $((n * n)); }; bak 22; true ; } > /tmp/black/plasm4_cr1ms0n
+            awk 'END{print "produced",NR,"records"}' /tmp/black/plasm4_cr1ms0n
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'plasm4_cr1ms0n'
+  v14-25-50:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Quiet the loud intrusion rules
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; sort -t : -k 3 -n /etc/group| awk -F: '$4 != "" {print $1}'| sort -f; true ; } > /tmp/black/v-v3.17.35
+            awk 'END{print "produced",NR,"records"}' /tmp/black/v-v3.17.35
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'v-v3.17.35'
+  shim_sail_noon_wide_throne:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Wake the heartbeat now
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/map-golden" && ls -ld "/tmp/map-golden" && rmdir "/tmp/map-golden"; true ; } > /tmp/black/hw.src.obj
+            awk 'END{print "produced",NR,"records"}' /tmp/black/hw.src.obj
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'hw.src.obj'
+  blog-init-create:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Bake Skybox For The Vertical Slice
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ls --directory --reverse -g --quoting-style=literal /sys/class/net /mnt | sort -k5 -n; true ; } > /tmp/black/sha_5a268482bf22
+            awk 'END{print "produced",NR,"records"}' /tmp/black/sha_5a268482bf22
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'sha_5a268482bf22'
+  shouldReset:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Sorry reconcile the idle nodes again
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; function ext_of { local s=0; for n; do s=$((s + n)); done; echo $s; }; ext_of 18 11 26 44; true ; } > /tmp/black/3LAoMu6sKjp
+            awk 'END{print "produced",NR,"records"}' /tmp/black/3LAoMu6sKjp
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '3LAoMu6sKjp'
+  sLuckValue:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Mask The Kernel
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; (echo one; echo two) > "${TMPDIR:-/tmp}/cron.category.tmp"; wc -l < "${TMPDIR:-/tmp}/cron.category.tmp"; true ; } > /tmp/black/zlDT
+            awk 'END{print "produced",NR,"records"}' /tmp/black/zlDT
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'zlDT'
+  PHOENIX_CREATE_FILTER_KAYAK:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Lucia owns tap
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; printf %s "one, two, three" | md5sum | awk '{print $1}'; true ; } > /tmp/black/197d1d33-f8f1
+            awk 'END{print "produced",NR,"records"}' /tmp/black/197d1d33-f8f1
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '197d1d33-f8f1'
+  uk_nz:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Create baseline A
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; find /run -type l -size 0 -newermt "2 days ago" -exec stat -c %F "{}" \; 2>/dev/null | sort -r; true ; } > /tmp/black/rvm1l5gx8td
+            awk 'END{print "produced",NR,"records"}' /tmp/black/rvm1l5gx8td
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'rvm1l5gx8td'
+  ttbFixture_22:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: still hovering cookie banner
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ls -A ~|sort|uniq -c|sort -n -r|cut -c1-25|wc -l; true ; } > /tmp/black/PO53927
+            awk 'END{print "produced",NR,"records"}' /tmp/black/PO53927
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'PO53927'
+  MAX_ALPHA_SIZE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Aggregate Product Catalog mk5
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; for i in {1..10}; do echo $RANDOM; done | sort -n | tail -1; true ; } > /tmp/black/scratch4da62
+            awk 'END{print "produced",NR,"records"}' /tmp/black/scratch4da62
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'scratch4da62'
+  manifestMu:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Sync the cron jobs to Chicago
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; TEXT=forumrecord && echo "[${TEXT,,}]"; true ; } > /tmp/black/_wipd2c57fb
+            awk 'END{print "produced",NR,"records"}' /tmp/black/_wipd2c57fb
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '_wipd2c57fb'
+  nLogins:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: wipe rank 9
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; /usr/bin/ls -g --no-group --time-style=+%F /usr/share/common-licenses|tail -n 5; true ; } > /tmp/black/shimmer_cobalt_harbor
+            awk 'END{print "produced",NR,"records"}' /tmp/black/shimmer_cobalt_harbor
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'shimmer_cobalt_harbor'
+  dispatchJob:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Seriously review the card settlements this time
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; cp -r /etc/skel "/tmp/flight-message-step"&& ls -A "/tmp/flight-message-step"; true ; } > /tmp/black/sample-52y
+            awk 'END{print "produced",NR,"records"}' /tmp/black/sample-52y
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'sample-52y'
+  flattenPathSegmentData:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Bonk the backlog
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; echo 'compressing logs' > "/tmp/amber.conf" && cp "/tmp/amber.conf" /tmp/schema.txt && diff "/tmp/amber.conf" /tmp/schema.txt && echo identical; true ; } > /tmp/black/seed-57g
+            awk 'END{print "produced",NR,"records"}' /tmp/black/seed-57g
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'seed-57g'
+  zz:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: Sandboxing the secrets please wait
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; basename "${TMPDIR:-/tmp}/attic.card.worker.md" .md; true ; } > /tmp/black/5bd33c145b1f1c08c8
+            awk 'END{print "produced",NR,"records"}' /tmp/black/5bd33c145b1f1c08c8
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - '5bd33c145b1f1c08c8'
+  l-dialog:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/black
+      - run:
+          name: shadow sandbox user sessions
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; printf '%s\0' dog otter cat seal|xargs -0 -n1 echo; true ; } > /tmp/black/debug-940c.log
+            awk 'END{print "produced",NR,"records"}' /tmp/black/debug-940c.log
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'debug-940c.log'
+  dropField:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Create baseline A
+          command: |
+            mkdir -p /tmp/black
+            { set +o pipefail 2>/dev/null; ls -l /usr/bin | awk '{print $5}' | awk '{print $1 * 2}' | wc -l; true ; } > /tmp/black/trace_20201012
+            awk 'END{print "produced",NR,"records"}' /tmp/black/trace_20201012
+      - persist_to_workspace:
+          root: /tmp/black
+          paths:
+            - 'trace_20201012'
+workflows:
+  release:
+    jobs:
+      - sara-chen
+      - a2f12b63-cad0-f6:
+          requires:
+            - sara-chen
+      - preview-v5:
+          requires:
+            - a2f12b63-cad0-f6
+      - cfl:
+          requires:
+            - a2f12b63-cad0-f6
+      - bigOrbit:
+          requires:
+            - cfl
+      - alpha-1:
+          requires:
+            - bigOrbit
+      - ladder55165:
+          requires:
+            - bigOrbit
+      - while_val:
+          requires:
+            - ladder55165
+      - verify-nightly-regression-suite:
+          requires:
+            - while_val
+      - OPHCE-11435:
+          requires:
+            - while_val
+      - arrayredobuild:
+          requires:
+            - OPHCE-11435
+      - q3-rev:
+          requires:
+            - arrayredobuild
+      - soupZulu:
+          requires:
+            - arrayredobuild
+      - edge55-north:
+          requires:
+            - soupZulu
+      - publish:
+          requires:
+            - edge55-north
+      - button_pad_session:
+          requires:
+            - edge55-north
+      - tax-build-class:
+          requires:
+            - button_pad_session
+      - gating:
+          requires:
+            - tax-build-class
+      - l-progress:
+          requires:
+            - tax-build-class
+      - EllaReader:
+          requires:
+            - l-progress
+      - WEB-119:
+          requires:
+            - EllaReader
+      - EagerDualCtxConverter:
+          requires:
+            - EllaReader
+      - trainer:
+          requires:
+            - EagerDualCtxConverter
+      - preview:
+          requires:
+            - trainer
+      - aiGrowChunk:
+          requires:
+            - trainer
+      - NEW_A:
+          requires:
+            - aiGrowChunk
+      - hotfix-6284:
+          requires:
+            - NEW_A
+      - panelShouldVisit:
+          requires:
+            - NEW_A
+      - GetCloakStopCreateSetDepth:
+          requires:
+            - panelShouldVisit
+      - cf-x:
+          requires:
+            - GetCloakStopCreateSetDepth
+      - Puzzles:
+          requires:
+            - GetCloakStopCreateSetDepth
+      - carol89:
+          requires:
+            - Puzzles
+      - cerberus-ng:
+          requires:
+            - carol89
+      - adapter_ref:
+          requires:
+            - carol89
+      - phj2h6bvcrovce:
+          requires:
+            - adapter_ref
+      - anothr-run:
+          requires:
+            - phj2h6bvcrovce
+      - canoe-date-sage-object:
+          requires:
+            - phj2h6bvcrovce
+      - op_november:
+          requires:
+            - canoe-date-sage-object
+      - STAGE_QA:
+          requires:
+            - op_november
+      - bagel-avatar:
+          requires:
+            - op_november
+      - ichHotSub:
+          requires:
+            - bagel-avatar
+      - depoly:
+          requires:
+            - ichHotSub
+      - TEXTURE_2:
+          requires:
+            - ichHotSub
+      - v14-25-50:
+          requires:
+            - TEXTURE_2
+      - prometheus-v2:
+          requires:
+            - v14-25-50
+      - DDEQ-15745-src
+      - shim_sail_noon_wide_throne:
+          requires:
+            - DDEQ-15745-src
+      - produce-nightly-test-matrix:
+          requires:
+            - shim_sail_noon_wide_throne
+      - stumpdrotzyi:
+          requires:
+            - shim_sail_noon_wide_throne
+      - blog-init-create:
+          requires:
+            - stumpdrotzyi
+      - sam-ship:
+          requires:
+            - blog-init-create
+      - frame-city-birch:
+          requires:
+            - blog-init-create
+      - shouldReset:
+          requires:
+            - frame-city-birch
+      - INIT_LAB:
+          requires:
+            - shouldReset
+      - aud_6_12_40:
+          requires:
+            - shouldReset
+      - sLuckValue:
+          requires:
+            - aud_6_12_40
+      - v5-beta2:
+          requires:
+            - sLuckValue
+      - c8b5bd9a38275:
+          requires:
+            - sLuckValue
+      - PHOENIX_CREATE_FILTER_KAYAK:
+          requires:
+            - c8b5bd9a38275
+      - node20-build:
+          requires:
+            - PHOENIX_CREATE_FILTER_KAYAK
+      - TMP_FORMAT:
+          requires:
+            - PHOENIX_CREATE_FILTER_KAYAK
+      - uk_nz:
+          requires:
+            - TMP_FORMAT
+      - yankee-4:
+          requires:
+            - uk_nz
+      - isDeprecated:
+          requires:
+            - uk_nz
+      - ttbFixture_22:
+          requires:
+            - isDeprecated
+      - bun-test:
+          requires:
+            - ttbFixture_22
+      - RULE_H:
+          requires:
+            - ttbFixture_22
+      - MAX_ALPHA_SIZE:
+          requires:
+            - RULE_H
+      - q1-rev:
+          requires:
+            - MAX_ALPHA_SIZE
+      - DBFactory:
+          requires:
+            - MAX_ALPHA_SIZE
+      - manifestMu:
+          requires:
+            - DBFactory
+      - romeo:
+          requires:
+            - manifestMu
+      - BODY_PRODUCT:
+          requires:
+            - manifestMu
+      - nLogins:
+          requires:
+            - BODY_PRODUCT
+      - MERGE_DEV:
+          requires:
+            - nLogins
+      - DEPT-CHG-KEY:
+          requires:
+            - nLogins
+      - dispatchJob:
+          requires:
+            - DEPT-CHG-KEY
+      - send-it:
+          requires:
+            - dispatchJob
+      - fetchHTTPS:
+          requires:
+            - dispatchJob
+      - flattenPathSegmentData:
+          requires:
+            - fetchHTTPS
+      - auh-check:
+          requires:
+            - flattenPathSegmentData
+      - stopOrigGraph:
+          requires:
+            - flattenPathSegmentData
+      - zz:
+          requires:
+            - stopOrigGraph
+      - wip-edge-crash:
+          requires:
+            - zz
+      - textarea--left:
+          requires:
+            - zz
+      - l-dialog:
+          requires:
+            - textarea--left
+      - promote:
+          requires:
+            - l-dialog
+      - espressoPiston:
+          requires:
+            - l-dialog
+      - dropField:
+          requires:
+            - espressoPiston
+      - PackageImage:
+          requires:
+            - dropField
